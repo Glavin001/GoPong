@@ -31,6 +31,13 @@ var maxScore = 7;
 // set opponent reflexes (0 - easiest, 1 - hardest)
 var difficulty = 0.2;
 
+// global game state
+var state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
+
+// internal pointer to timeout between consequent
+// pause/unpause game
+var pause_timeout;
+
 // ------------------------------------- //
 // ------- GAME FUNCTIONS -------------- //
 // ------------------------------------- //
@@ -38,7 +45,9 @@ var difficulty = 0.2;
 function setup()
 {
 	// update the board to reflect the max score for match win
-	document.getElementById("winnerBoard").innerHTML = "First to " + maxScore + " wins!";
+	$('#winnerBoard').html("First to " + maxScore + " wins!");
+	
+	$(window).keydown(handlePause);
 	
 	// now reset player and opponent scores
 	score1 = 0;
@@ -50,6 +59,8 @@ function setup()
 	// and let's get cracking!
 	draw();
 }
+
+$(setup);
 
 function createScene()
 {
@@ -334,17 +345,39 @@ function createScene()
 }
 
 function draw()
-{	
+{
 	// draw THREE.JS scene
 	renderer.render(scene, camera);
 	// loop draw function call
 	requestAnimationFrame(draw);
 	
-	ballPhysics();
-	paddlePhysics();
-	cameraPhysics();
-	playerPaddleMovement();
-	opponentPaddleMovement();
+	if ( state != 'PAUSED')
+	{
+		ballPhysics();
+		paddlePhysics();
+		cameraPhysics();
+		playerPaddleMovement();
+		opponentPaddleMovement();
+	}
+}
+
+function handlePause() {
+	if ( ! Key.isDown(Key.P)) return;
+	
+	if (pause_timeout) return;
+	
+	pause_timeout = setTimeout(
+		function () {
+			togglePause();
+			pause_timeout = false;
+		},
+		250
+	);
+}
+
+function togglePause() {
+	state = (state == 'ACTION') ? 'PAUSED' : 'ACTION';
+	$('#pause').toggle();
 }
 
 function ballPhysics()
