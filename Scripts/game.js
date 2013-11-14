@@ -423,6 +423,10 @@ var PongGame = function () {
 		$('#pause').toggle();
 	}
 
+	function updateScore() {
+		$("#scores").html(score1 + "-" + score2);
+	}
+
 	function ballPhysics()
 	{
 		// if ball goes off the 'left' side (Player's side)
