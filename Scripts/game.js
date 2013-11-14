@@ -74,6 +74,9 @@ var PongGame = function () {
 		
 		// and let's get cracking!
 		draw();
+
+		// Resize to screen size
+		onWindowResize();
 	}
 	
 	setup();
@@ -382,6 +385,24 @@ var PongGame = function () {
 			opponentPaddleMovement();
 		}
 	}
+
+	function onWindowResize(event) {
+		var container = $("#gameCanvas").get(0);
+		//console.log(container);
+		var width = container.clientWidth;
+		var height = container.clientHeight;
+		//console.log( width + "," + height );
+		renderer.setSize(width, height);
+		camera.aspect = width / height;
+		camera.updateProjectionMatrix();
+		//controls.handleResize();
+	}
+
+	var resizeTimer;
+	$(window).resize(function() {
+	    clearTimeout(resizeTimer);
+	    resizeTimer = setTimeout(onWindowResize, 100);
+	});
 
 	function handlePause() {
 		if ( ! Key.isDown(Key.P)) return;
