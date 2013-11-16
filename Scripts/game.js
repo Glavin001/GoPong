@@ -28,7 +28,7 @@ var PongGame = function () {
 
 	// ball variables
 	var ball, paddle1, paddle2;
-	var ballDirX = 1, ballDirY = 1, ballSpeed = 5;
+	var ballDirX = 1, ballDirY = 1, ballSpeed = 3;
 
 	// game-related variables
 	var score1 = 0, score2 = 0;
@@ -280,6 +280,7 @@ var PongGame = function () {
 		paddle1.position.z = paddleDepth;
 		paddle2.position.z = paddleDepth;
 			
+		/*
 		// we iterate 10x (5x each side) to create pillars to show off shadows
 		// this is for the pillars on the left
 		for (var i = 0; i < 5; i++)
@@ -326,6 +327,7 @@ var PongGame = function () {
 			backdrop.receiveShadow = true;		
 			scene.add(backdrop);	
 		}
+		*/
 		
 		// finally we finish by adding a ground plane
 		// to show off pretty shadows
@@ -551,7 +553,7 @@ var PongGame = function () {
 	function playerPaddleMovement()
 	{
 		// move left
-		if (Key.isDown(Key.A))
+		if (Key.isDown(Key.A) || Key.isDown(Key.LEFT))
 		{
 			// if paddle is not touching the side of table
 			// we move
@@ -568,7 +570,7 @@ var PongGame = function () {
 			}
 		}	
 		// move right
-		else if (Key.isDown(Key.D))
+		else if (Key.isDown(Key.D) || Key.isDown(Key.RIGHT))
 		{
 			// if paddle is not touching the side of table
 			// we move
