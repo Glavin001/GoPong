@@ -3,6 +3,10 @@
 	<head>
 		<title>Game</title>
 		<link href="./Styles/main.css" media="all" rel="stylesheet" type="text/css">
+	    <!-- CSS -->
+	    <link rel="stylesheet" href="https://cdn.goinstant.net/widgets/notifications/latest/notifications.css" />
+	    <link rel="stylesheet" href="https://cdn.goinstant.net/widgets/user-list/latest/user-list.css" />
+
 	</head>
 	<body id="main">
 		<div id='scoreboard'>
@@ -11,15 +15,23 @@
 			<h1 id='title'>3D PONG</h1>
 			<h2 id='winnerBoard'>First to 7 wins!</h2>
 			<h3>
-				A - move left
-				<br>D - move right
-				<br>P - pause/unpause
+				A - Move Left
+				<br>D - Move Right
+				<br>P - Pause/Unpause
+				<br>ENTER - Restart
 			</h3>
 		</div>
 		<div id='gameCanvas'></div>
+
 		<script src='./Scripts/jquery-1.10.2.min.js'></script>
 		<script src='./Scripts/three.min.js'></script>
 		<script src='./Scripts/keyboard.js'></script>
 		<script src='./Scripts/game.js'></script>
+        <script type="text/javascript" src="https://cdn.goinstant.net/v1/platform.min.js"></script>
+    	<!-- GoInstant Widgets -->
+	    <script type="text/javascript" src="https://cdn.goinstant.net/widgets/user-list/latest/user-list.min.js"></script>
+	    <script type="text/javascript" src="https://cdn.goinstant.net/widgets/notifications/latest/notifications.min.js"></script>
+	    <script type="text/javascript" src="https://cdn.goinstant.net/widgets/user-colors/latest/user-colors.min.js"></script>
+        <script src="./Scripts/gopong.js"></script>
 	</body>
 </html>

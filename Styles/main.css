@@ -5,6 +5,7 @@ html, body, #gameCanvas {
 
 body {
 	background-color: black;
+	margin: 0px;
 }
 #gameCanvas {
 	background-color: black;
