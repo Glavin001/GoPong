@@ -24,11 +24,12 @@ var PongGame = function () {
 
 	// paddle variables
 	var paddleWidth, paddleHeight, paddleDepth, paddleQuality;
-	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 5;
+	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 10;
+	var cameraHover = 100;
 
 	// ball variables
 	var ball, paddle1, paddle2;
-	var ballDirX = 1, ballDirY = 1, ballSpeed = 3;
+	var ballDirX = 1, ballDirY = 1, ballSpeed = 5;
 
 	// game-related variables
 	var score1 = 0, score2 = 0;
@@ -279,8 +280,7 @@ var PongGame = function () {
 		// lift paddles over playing surface
 		paddle1.position.z = paddleDepth;
 		paddle2.position.z = paddleDepth;
-			
-		/*
+		
 		// we iterate 10x (5x each side) to create pillars to show off shadows
 		// this is for the pillars on the left
 		for (var i = 0; i < 5; i++)
@@ -327,7 +327,6 @@ var PongGame = function () {
 			backdrop.receiveShadow = true;		
 			scene.add(backdrop);	
 		}
-		*/
 		
 		// finally we finish by adding a ground plane
 		// to show off pretty shadows
@@ -410,6 +409,11 @@ var PongGame = function () {
 	    resizeTimer = setTimeout(onWindowResize, 100);
 	});
 
+	$(window).blur(function() {
+		state = "PAUSED";
+		$('#pause').toggle();
+	});
+
 	function handlePause() {
 		if ( ! Key.isDown(Key.P)) return;
 		
@@ -425,7 +429,7 @@ var PongGame = function () {
 	}
 
 	function handleRestart() {
-		if ( ! Key.isDown(Key.ENTER)) return;
+		if ( ! Key.isDown(Key.ENTER) && ! Key.isDown(Key.R)) return;
 		
 		if (restart_timeout) return;
 		
@@ -608,7 +612,7 @@ var PongGame = function () {
 		// move to behind the player's paddle
 		camera.position.x = paddle1.position.x - 100;
 		camera.position.y += (paddle1.position.y - camera.position.y) * 0.05;
-		camera.position.z = paddle1.position.z + 100 + 0.04 * (-ball.position.x + paddle1.position.x);
+		camera.position.z = paddle1.position.z + cameraHover + 0.04 * (-ball.position.x + paddle1.position.x);
 		
 		// rotate to face towards the opponent
 		camera.rotation.x = -0.01 * (ball.position.y) * Math.PI/180;
