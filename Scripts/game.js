@@ -24,16 +24,16 @@ var PongGame = function () {
 
 	// paddle variables
 	var paddleWidth, paddleHeight, paddleDepth, paddleQuality;
-	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 3;
+	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 5;
 
 	// ball variables
 	var ball, paddle1, paddle2;
-	var ballDirX = 1, ballDirY = 1, ballSpeed = 2;
+	var ballDirX = 1, ballDirY = 1, ballSpeed = 5;
 
 	// game-related variables
 	var score1 = 0, score2 = 0;
 	// you can change this to any positive whole number
-	var maxScore = 7;
+	var maxScore = 10;
 
 	// set opponent reflexes (0 - easiest, 1 - hardest)
 	var difficulty = 0.2;
@@ -43,8 +43,9 @@ var PongGame = function () {
 
 	// internal pointer to timeout between consequent
 	// pause/unpause game
-	var pause_timeout;
+	var pause_timeout, restart_timeout;
 	
+	/*
 	var keyboard_keys = {
 		A: 65,
 		W: 87,
@@ -53,6 +54,7 @@ var PongGame = function () {
 		P: 80,
 		SPACE: 32,
 	}
+	*/
 
 	// ------------------------------------- //
 	// ------- GAME FUNCTIONS -------------- //
@@ -79,6 +81,7 @@ var PongGame = function () {
 		onWindowResize();
 	}
 	
+	// === Start the game ===
 	setup();
 
 	function handleKeyboard() {
@@ -375,6 +378,7 @@ var PongGame = function () {
 		requestAnimationFrame(draw);
 		
 		handlePause();
+		handleRestart();
 		
 		if ( state != 'PAUSED')
 		{
@@ -416,6 +420,35 @@ var PongGame = function () {
 			},
 			250
 		);
+	}
+
+	function handleRestart() {
+		if ( ! Key.isDown(Key.ENTER)) return;
+		
+		if (restart_timeout) return;
+		
+		restart_timeout = setTimeout(
+			function () {
+				restart();
+				restart_timeout = false;
+			},
+			25
+		);
+	}
+	
+	function restart() {
+		paddle1DirY = 0, paddle2DirY = 0;
+		// ball variables
+		ballDirX = 1, ballDirY = 1, ballSpeed = 5;
+		ball.position.x = 0;
+		ball.position.y = 0;
+		// game-related variables
+		score1 = 0, score2 = 0;
+		document.getElementById("scores").innerHTML = score1 + "-" + score2;
+		// set opponent reflexes (0 - easiest, 1 - hardest)
+		difficulty = 0.2;
+		// global game state
+		state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
 	}
 
 	function togglePause() {
@@ -671,7 +704,7 @@ var PongGame = function () {
 			ballSpeed = 0;
 			// write to the banner
 			document.getElementById("scores").innerHTML = "Player wins!";		
-			document.getElementById("winnerBoard").innerHTML = "Refresh to play again";
+			document.getElementById("winnerBoard").innerHTML = "Press ENTER to play again";
 			// make paddle bounce up and down
 			bounceTime++;
 			paddle1.position.z = Math.sin(bounceTime * 0.1) * 10;
@@ -686,7 +719,7 @@ var PongGame = function () {
 			ballSpeed = 0;
 			// write to the banner
 			document.getElementById("scores").innerHTML = "CPU wins!";
-			document.getElementById("winnerBoard").innerHTML = "Refresh to play again";
+			document.getElementById("winnerBoard").innerHTML = "Press ENTER to play again";
 			// make paddle bounce up and down
 			bounceTime++;
 			paddle2.position.z = Math.sin(bounceTime * 0.1) * 10;
