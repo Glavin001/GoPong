@@ -1,7 +1,8 @@
 
 // --------------------------------------------- //
 // ------- 3D PONG built with Three.JS --------- //
-// -------- Created by Nikhil Suresh ----------- //
+// -------- Improved by Glavin Wiechert -------- //
+// - Started by Nikhil Suresh as Open Source tutorial - //
 // -------- Three.JS is by Mr. doob  ----------- //
 // --------------------------------------------- //
 
@@ -24,12 +25,12 @@ var PongGame = function () {
 
 	// paddle variables
 	var paddleWidth, paddleHeight, paddleDepth, paddleQuality;
-	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 10;
+	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 3;
 	var cameraHover = 100;
 
 	// ball variables
 	var ball, paddle1, paddle2;
-	var ballDirX = 1, ballDirY = 1, ballSpeed = 5;
+	var ballDirX = 1, ballDirY = 1, ballSpeed = 1;
 
 	// game-related variables
 	var score1 = 0, score2 = 0;
@@ -37,7 +38,7 @@ var PongGame = function () {
 	var maxScore = 10;
 
 	// set opponent reflexes (0 - easiest, 1 - hardest)
-	var difficulty = 0.2;
+	var difficulty = 1.0; //0.2;
 
 	// global game state
 	var state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
@@ -46,16 +47,15 @@ var PongGame = function () {
 	// pause/unpause game
 	var pause_timeout, restart_timeout;
 	
-	/*
-	var keyboard_keys = {
-		A: 65,
-		W: 87,
-		D: 68,
-		S: 83,
-		P: 80,
-		SPACE: 32,
-	}
-	*/
+	// Display Stats
+	var stats = new Stats();
+	stats.setMode(0); // 0: fps, 1: ms
+	// Align top-left
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = '0px';
+	stats.domElement.style.top = '0px';
+	//
+	document.body.appendChild( stats.domElement );
 
 	// ------------------------------------- //
 	// ------- GAME FUNCTIONS -------------- //
@@ -63,27 +63,38 @@ var PongGame = function () {
 
 	function setup()
 	{
-		// update the board to reflect the max score for match win
-		$('#winnerBoard').html("First to " + maxScore + " wins!");
-		
-		handleKeyboard();
-		
-		// now reset player and opponent scores
-		score1 = 0;
-		score2 = 0;
-		
+		handleKeyboard();	
 		// set up all the 3D objects in the scene	
 		createScene();
-		
 		// and let's get cracking!
 		draw();
-
 		// Resize to screen size
 		onWindowResize();
+		// 
+		restart();
 	}
 	
 	// === Start the game ===
 	setup();
+
+	function restart() {
+		// update the board to reflect the max score for match win
+		$('#winnerBoard').html("First to " + maxScore + " wins!");
+		paddle1DirY = 0, paddle2DirY = 0;
+		// ball variables
+		ballDirX = 1, ballDirY = 1, ballSpeed = 5;
+		ball.position.x = 0;
+		ball.position.y = 0;
+		// game-related variables
+		// now reset player and opponent scores
+		score1 = 0, score2 = 0;
+		document.getElementById("scores").innerHTML = score1 + "-" + score2;
+		// set opponent reflexes (0 - easiest, 1 - hardest)
+		difficulty = 0.2;
+		// global game state
+		state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
+		togglePause();
+	}
 
 	function handleKeyboard() {
 		$(window).on('keyup', Key.onKeyup);
@@ -373,6 +384,8 @@ var PongGame = function () {
 
 	function draw()
 	{
+	    stats.begin();
+
 		// draw THREE.JS scene
 		renderer.render(scene, camera);
 		// loop draw function call
@@ -389,6 +402,8 @@ var PongGame = function () {
 			playerPaddleMovement();
 			opponentPaddleMovement();
 		}
+
+	    stats.end();
 	}
 
 	function onWindowResize(event) {
@@ -441,25 +456,15 @@ var PongGame = function () {
 			25
 		);
 	}
-	
-	function restart() {
-		paddle1DirY = 0, paddle2DirY = 0;
-		// ball variables
-		ballDirX = 1, ballDirY = 1, ballSpeed = 5;
-		ball.position.x = 0;
-		ball.position.y = 0;
-		// game-related variables
-		score1 = 0, score2 = 0;
-		document.getElementById("scores").innerHTML = score1 + "-" + score2;
-		// set opponent reflexes (0 - easiest, 1 - hardest)
-		difficulty = 0.2;
-		// global game state
-		state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
-	}
 
 	function togglePause() {
 		state = (state == 'ACTION') ? 'PAUSED' : 'ACTION';
 		$('#pause').toggle();
+		if (state === 'PAUSED') {
+			$('#scoreboard').show();
+		} else {
+			$('#scoreboard').hide();	
+		}
 	}
 
 	function updateScore() {
@@ -711,6 +716,7 @@ var PongGame = function () {
 			// write to the banner
 			document.getElementById("scores").innerHTML = "Player wins!";		
 			document.getElementById("winnerBoard").innerHTML = "Press ENTER to play again";
+			togglePause();
 			// make paddle bounce up and down
 			bounceTime++;
 			paddle1.position.z = Math.sin(bounceTime * 0.1) * 10;
@@ -726,6 +732,7 @@ var PongGame = function () {
 			// write to the banner
 			document.getElementById("scores").innerHTML = "CPU wins!";
 			document.getElementById("winnerBoard").innerHTML = "Press ENTER to play again";
+			togglePause();
 			// make paddle bounce up and down
 			bounceTime++;
 			paddle2.position.z = Math.sin(bounceTime * 0.1) * 10;
