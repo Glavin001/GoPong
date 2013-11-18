@@ -655,6 +655,10 @@ var PongGame = function () {
 					paddle1.scale.z = 15;
 					// switch direction of ball travel to create bounce
 					ballDirX = -ballDirX;
+					//
+					if (Key.isDown(Key.SPACE)) {
+						ballDirX *= 2.0;
+					};
 					// we impact ball angle when hitting it
 					// this is not realistic physics, just spices up the gameplay
 					// allows you to 'slice' the ball to beat the opponent
@@ -683,6 +687,10 @@ var PongGame = function () {
 					paddle2.scale.z = 15;	
 					// switch direction of ball travel to create bounce
 					ballDirX = -ballDirX;
+					//
+					if (Key.isDown(Key.SPACE)) {
+						ballDirX *= 2.0;
+					};
 					// we impact ball angle when hitting it
 					// this is not realistic physics, just spices up the gameplay
 					// allows you to 'slice' the ball to beat the opponent
