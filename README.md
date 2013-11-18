@@ -1,4 +1,4 @@
-Web Pong in 3D.
+> Pong in 3D for the web.
 
 ## Features:
 - Web 3D using Three.js
