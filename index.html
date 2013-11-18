@@ -27,12 +27,42 @@
 		<script src='./Scripts/three.min.js'></script>
 		<script src='./Scripts/keyboard.js'></script>
 		<script src='./Scripts/Stats.js'></script>
+		<script>
+			//window.requestAnimationFrame = null;
+			//window.webkitRequestAnimationFrame = null;
+			(function() {
+			    var lastTime = 0;
+			    var vendors = ['webkit', 'moz'];
+			    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+			        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+			        window.cancelAnimationFrame =
+			          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+			    }
+
+			    if (!window.requestAnimationFrame)
+			        window.requestAnimationFrame = function(callback, element) {
+			            var currTime = new Date().getTime();
+			            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+			            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+			              timeToCall);
+			            lastTime = currTime + timeToCall;
+			            return id;
+			        };
+
+			    if (!window.cancelAnimationFrame)
+			        window.cancelAnimationFrame = function(id) {
+			            clearTimeout(id);
+			        };
+			}());
+		</script>
 		<script src='./Scripts/game.js'></script>
         <script type="text/javascript" src="https://cdn.goinstant.net/v1/platform.min.js"></script>
     	<!-- GoInstant Widgets -->
+    	<!--
 	    <script type="text/javascript" src="https://cdn.goinstant.net/widgets/user-list/latest/user-list.min.js"></script>
 	    <script type="text/javascript" src="https://cdn.goinstant.net/widgets/notifications/latest/notifications.min.js"></script>
 	    <script type="text/javascript" src="https://cdn.goinstant.net/widgets/user-colors/latest/user-colors.min.js"></script>
         <script src="./Scripts/gopong.js"></script>
+    	-->
 	</body>
 </html>

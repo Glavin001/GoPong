@@ -20,12 +20,12 @@ var PongGame = function () {
 	var renderer, scene, camera, pointLight, spotLight;
 
 	// field variables
-	var fieldWidth = 400;
+	var fieldWidth = 500;
 	var fieldHeight = 200;
 
 	// paddle variables
 	var paddleWidth, paddleHeight, paddleDepth, paddleQuality;
-	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 3;
+	var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 7;
 	var cameraHover = 100;
 
 	// ball variables
@@ -38,7 +38,7 @@ var PongGame = function () {
 	var maxScore = 10;
 
 	// set opponent reflexes (0 - easiest, 1 - hardest)
-	var difficulty = 1.0; //0.2;
+	var difficulty = 0.2;
 
 	// global game state
 	var state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
@@ -52,8 +52,8 @@ var PongGame = function () {
 	stats.setMode(0); // 0: fps, 1: ms
 	// Align top-left
 	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.left = '0px';
-	stats.domElement.style.top = '0px';
+	stats.domElement.style.left = '5px';
+	stats.domElement.style.top = '5px';
 	//
 	document.body.appendChild( stats.domElement );
 
@@ -385,15 +385,14 @@ var PongGame = function () {
 	function draw()
 	{
 	    stats.begin();
-
 		// draw THREE.JS scene
 		renderer.render(scene, camera);
 		// loop draw function call
 		requestAnimationFrame(draw);
-		
+		//
 		handlePause();
 		handleRestart();
-		
+		//
 		if ( state != 'PAUSED')
 		{
 			ballPhysics();
@@ -402,8 +401,8 @@ var PongGame = function () {
 			playerPaddleMovement();
 			opponentPaddleMovement();
 		}
-
-	    stats.end();
+		//
+	    stats.end();		
 	}
 
 	function onWindowResize(event) {
@@ -458,12 +457,18 @@ var PongGame = function () {
 	}
 
 	function togglePause() {
-		state = (state == 'ACTION') ? 'PAUSED' : 'ACTION';
-		$('#pause').toggle();
-		if (state === 'PAUSED') {
-			$('#scoreboard').show();
+		if (state == 'PAUSED' && ( score1 >= maxScore || score2 >= maxScore)) {
+			restart();
 		} else {
-			$('#scoreboard').hide();	
+			state = (state == 'ACTION') ? 'PAUSED' : 'ACTION';
+			if (state === 'PAUSED') {
+				$('#pause').html("GAME PAUSED").show();
+				$('#title').html("Press P to unpause");
+				$('#scoreboard').show();
+			} else {
+				$('#pause').hide();
+				$('#scoreboard').hide();	
+			}
 		}
 	}
 
