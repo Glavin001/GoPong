@@ -1,3 +1,10 @@
-This is a game built for the BuildNewGames tutorial at http://www.buildnewgames.com
+Web Pong in 3D.
 
-<img src="http://i.imgur.com/Cb8CpLG.png?1" width='400'/>
+## Features:
+- Web 3D using Three.js
+
+## Coming Soon
+- Multiplayer with GoInstant
+
+## Screenshots:
+![Screenshot](threejs-webgl-pong.png "Screenshot")
