@@ -38,7 +38,7 @@ var PongGame = function () {
 	var maxScore = 10;
 
 	// set opponent reflexes (0 - easiest, 1 - hardest)
-	var difficulty = 0.2;
+	var difficulty = 0.3;
 
 	// global game state
 	var state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
@@ -90,7 +90,7 @@ var PongGame = function () {
 		score1 = 0, score2 = 0;
 		document.getElementById("scores").innerHTML = score1 + "-" + score2;
 		// set opponent reflexes (0 - easiest, 1 - hardest)
-		difficulty = 0.2;
+		//difficulty = 0.2;
 		// global game state
 		state = 'ACTION'; // Can be 'ACTION' or 'PAUSED'
 		togglePause();
@@ -424,8 +424,8 @@ var PongGame = function () {
 	});
 
 	$(window).blur(function() {
-		state = "PAUSED";
-		$('#pause').toggle();
+		state = "ACTION";
+		togglePause();
 	});
 
 	function handlePause() {
@@ -533,9 +533,11 @@ var PongGame = function () {
 	// Handles CPU paddle movement and logic
 	function opponentPaddleMovement()
 	{
+		//console.log(paddle2.position);
 		// Lerp towards the ball on the y plane
 		paddle2DirY = (ball.position.y - paddle2.position.y) * difficulty;
-		
+		//console.log(paddle2DirY);
+
 		// in case the Lerp function produces a value above max paddle speed, we clamp it
 		if (Math.abs(paddle2DirY) <= paddleSpeed)
 		{	
@@ -560,6 +562,7 @@ var PongGame = function () {
 		// stretching is done when paddle touches side of table and when paddle hits ball
 		// by doing this here, we ensure paddle always comes back to default size
 		paddle2.scale.y += (1 - paddle2.scale.y) * 0.2;	
+		paddle2.scale.z += (1 - paddle2.scale.z) * 0.2;
 	}
 
 
@@ -649,13 +652,14 @@ var PongGame = function () {
 				if (ballDirX < 0)
 				{
 					// stretch the paddle to indicate a hit
-					paddle1.scale.y = 15;
+					paddle1.scale.z = 15;
 					// switch direction of ball travel to create bounce
 					ballDirX = -ballDirX;
 					// we impact ball angle when hitting it
 					// this is not realistic physics, just spices up the gameplay
 					// allows you to 'slice' the ball to beat the opponent
-					ballDirY -= paddle1DirY * 0.7;
+					//ballDirY -= paddle1DirY * 0.7;
+					ballDirY = ballDirY;
 				}
 			}
 		}
@@ -676,13 +680,14 @@ var PongGame = function () {
 				if (ballDirX > 0)
 				{
 					// stretch the paddle to indicate a hit
-					paddle2.scale.y = 15;	
+					paddle2.scale.z = 15;	
 					// switch direction of ball travel to create bounce
 					ballDirX = -ballDirX;
 					// we impact ball angle when hitting it
 					// this is not realistic physics, just spices up the gameplay
 					// allows you to 'slice' the ball to beat the opponent
-					ballDirY -= paddle2DirY * 0.7;
+					ballDirY = ballDirY;
+					//ballDirY -= paddle2DirY * 0.7;
 				}
 			}
 		}
